@@ -11,7 +11,7 @@ op_endpoint = {
 'configure':   ['set', 'delete', 'comment'],
 'retrieve':    ['returnValue', 'returnValues', 'exists', 'showConfig'],
 'config-file': ['save', 'load'],
-'image':       ['add', 'delete']
+'image':       ['add', 'remove']
 }
 
 def check_host(host):
@@ -76,10 +76,10 @@ elif endpoint == 'image':
     if file_arg:
         if args['op'] == 'add':
             data = { 'op': args['op'], 'url': file_arg }
-        if args['op'] == 'delete':
-            data = { 'op': args['op'], 'name': file_arg }
+        if args['op'] == 'remove':
+            data = { 'op': 'delete', 'name': file_arg }
     else:
-        sys.exit("add/delete requires a url, respectively, image name")
+        sys.exit("add/remove requires a url, respectively, image name")
 
 enc_data = json.dumps(data).encode('utf-8')
 
