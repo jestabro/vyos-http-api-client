@@ -42,6 +42,8 @@ parser.add_argument('op', action="store", type=check_op,
         '\n\n[config file ops:]\n'+', '.join(op_endpoint['config-file']) +
         '\n\n[image ops:]\n'+', '.join(op_endpoint['image']))
 parser.add_argument('op_arg', nargs='*', metavar='path|file|url|name')
+parser.add_argument('--port', action="store", type=str, default='',
+        help="host port")
 parser.add_argument('--id', action="store", type=str, default='testapp',
         help="api_keys id")
 parser.add_argument('--key', action="store", type=str, default='qwerty',
@@ -85,10 +87,15 @@ enc_data = json.dumps(data).encode('utf-8')
 
 fields = { 'id': args['id'], 'key': args['key'], 'data': enc_data }
 
-r = http.request('POST',
-        'https://{0}/{1}'.format(args['host'], endpoint),
-        fields)
+if not args['port']:
+    r = http.request('POST',
+            'https://{0}/{1}'.format(args['host'], endpoint),
+            fields)
+else:
+    r = http.request('POST',
+            'https://{0}:{1}/{2}'.format(args['host'], args['port'], endpoint),
+            fields)
 
 print(r.status)
-print(r.data)
+print(json.loads(r.data))
 
